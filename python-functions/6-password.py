@@ -15,6 +15,12 @@ def validate_password(password):
             has_digit = True
         elif char.isspace():
             return False
+            
+            password1 = "Passw0rd"
+            password2 = "securePassword"
+            password3 = "1234567"
+            password4 = "Password with spaces"
+
             validate_password(password1)
             validate_password(password2) 
             validate_password(password3)
