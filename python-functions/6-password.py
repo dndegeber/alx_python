@@ -19,10 +19,6 @@ def validate_password(password):
             
     return has_upper and has_lower and has_digit and not has_space
 
-# Test cases
-print(validate_password("Password123"))
-print(validate_password("abc123"))
-print(validate_password("Password 123"))
-print(validate_password("password123"))
+
 
 
