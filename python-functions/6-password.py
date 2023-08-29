@@ -1,28 +1,28 @@
 def validate_password(password):
     if len(password) < 8:
         return False
-
-        has_lowercase = False
-    has_uppercase = False
+    
+    has_upper = False
+    has_lower = False
     has_digit = False
-
+    has_space = False
+    
     for char in password:
-        if char.islower():
-            has_lowercase = True
-        elif char.isupper():
-            has_uppercase = True
+        if char.isupper():
+            has_upper = True
+        elif char.islower():
+            has_lower = True
         elif char.isdigit():
             has_digit = True
         elif char.isspace():
-            return False
+            has_space = True
             
-            password1 = "Passw0rd"
-            password2 = "securePassword"
-            password3 = "1234567"
-            password4 = "Password with spaces"
+    return has_upper and has_lower and has_digit and not has_space
 
-            validate_password(password1)
-            validate_password(password2) 
-            validate_password(password3)
-            validate_password(password4)
+# Test cases
+print(validate_password("Password123"))
+print(validate_password("abc123"))
+print(validate_password("Password 123"))
+print(validate_password("password123"))
+
 
