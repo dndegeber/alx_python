@@ -12,8 +12,4 @@ def is_prime(number):
             return False
         i += 6
         return True
-        
-is_prime(7)   # True
-is_prime(14)   # False
-is_prime(23)   # True
-is_prime(100)  # False
+    
