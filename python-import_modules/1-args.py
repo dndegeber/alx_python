@@ -1,18 +1,25 @@
 import sys
 
-# Get the list of arguments
-arguments = sys.argv[1:]
+def main():
+    # Get the arguments from sys.argv
+    arguments = sys.argv[1:]
 
-# Get the number of arguments
-num_arguments = len(arguments)
+    # Calculate the number of arguments
+    num_arguments = len(arguments)
 
-# Print the number of arguments and a colon or period
-if num_arguments == 0:
-    print("Number of argument(s): .")
-else:
-    print(f"Number of argument(s): {num_arguments}:")
+    # Print the number of arguments
+    if num_arguments == 0:
+        print("0 arguments.")
+    elif num_arguments == 1:
+        print("1 argument:")
+    else:
+        print(f"{num_arguments} arguments:")
 
-    # Print each argument with its position
+    # Print the list of arguments
     for i, arg in enumerate(arguments, 1):
         print(f"{i}: {arg}")
+
+if __name__ == "__main__":
+    main()
+
 
