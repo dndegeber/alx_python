@@ -1,7 +1,8 @@
-# models/base.py
+#!/usr/bin/python3
+"""Some module documentation"""
 
 class Base:
-    """The Base class for managing id attributes."""
+    """Some class documentation."""
     __nb_objects = 0
 
     def __init__(self, id=None):
