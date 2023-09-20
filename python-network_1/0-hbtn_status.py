@@ -6,7 +6,7 @@ def fetch_status():
     Fetches the status from https://alu-intranet.hbtn.io/status using requests module.
     Displays the response in a specific format.
     """
-    url = "https://alu-intranet.hbtn.io/status"
+    url = "https://intranet.hbtn.io/status"
     response = requests.get(url)
     content_type = type(response.text).__name__
     content = response.text
