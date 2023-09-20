@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import requests
 
 def fetch_status():
@@ -17,4 +18,4 @@ def fetch_status():
 if __name__ == "__main__":
     fetch_status()
 
-    
+
