@@ -6,33 +6,24 @@ def get_employee_info(employee_id):
     user_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}')
     todo_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}/todos')
 
-     # Fetch employee information
-    user_response = requests.get(user_url)
-    user_data = user_response.json()
-    employee_name = user_data.get('name')
 
-    # Fetch employee's TODO list
-    todos_response = requests.get(todos_url)
-    todos_data = todos_response.json()
 
-    # Calculate the number of completed and total tasks
-    total_tasks = len(todos_data)
-    completed_tasks = sum(1 for todo in todos_data if todo['completed'])
+    if user_response.status_code == 200 and todo_response.status_code == 200:
+        user_data = user_response.json()
+        todo_data = todo_response.json()
 
-    # Print the employee's TODO list progress in the specified format
-    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
-    for index, todo in enumerate(todos_data, start=1):
-        if todo['completed']:
-            print(f"\t{todo['title']}")
-
+        completed_tasks = [task for task in todo_data if task['completed']]
+        # Print employee data
+        print(f"Employee {user_data['name']} is done with tasks({len(completed_tasks)}/{len(todo_data)}):")
+        for task in completed_tasks:
+            print(f"\t{task['title']}")
+    else:
+        print(f"Error fetching data for employee ID {employee_id}")
+       # Print employee id
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python3 gather_data_from_an_API.py <employee_id>")
+        print("Usage: python3 script.py <employee_id>")
         sys.exit(1)
+    employee_id = int(sys.argv[1])
+    get_employee_info(employee_id)
 
-    try:
-        employee_id = int(sys.argv[1])
-        get_employee_info(employee_id)
-    except ValueError:
-        print("Employee ID must be an integer.")
-        sys.exit(1)
