@@ -1,8 +1,23 @@
+#!/usr/bin/env python3
+"""
+Script to fetch and export employee TODO list progress to a CSV file.
+"""
+
+import csv
 import requests
 import sys
-import csv
+
 
 def get_employee_info(employee_id):
+    """
+    Fetches and prints information about a user's completed tasks.
+
+    Args:
+        employee_id (int): The ID of the employee.
+
+    Returns:
+        None
+    """
     user_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}')
     todo_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}/todos')
 
@@ -33,6 +48,7 @@ def get_employee_info(employee_id):
         print(f"Data exported to {csv_filename}")
     else:
         print(f"Error fetching data for employee ID {employee_id}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
