@@ -56,3 +56,4 @@ if __name__ == "__main__":
         sys.exit(1)
     employee_id = int(sys.argv[1])
     get_employee_info(employee_id)
+    
