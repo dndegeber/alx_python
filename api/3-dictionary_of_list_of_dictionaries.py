@@ -1,6 +1,10 @@
 #!/usr/bin/python3
-import requests
+"""
+This script retrieves tasks for all users from a REST API and exports the data in JSON format.
+"""
+
 import json
+import requests
 
 if __name__ == '__main__':
     url = "https://jsonplaceholder.typicode.com/users"
@@ -9,8 +13,8 @@ if __name__ == '__main__':
 
     tasks = {}
     for user in users:
-        user_id = str(user["id"])
-        username = user["username"]
+        user_id = str(user.get("id"))
+        username = user.get("username")
 
         url = f"https://jsonplaceholder.typicode.com/users/{user_id}/todos"
         response = requests.get(url)
@@ -20,8 +24,8 @@ if __name__ == '__main__':
         for todo in todos:
             task_list.append({
                 "username": username,
-                "task": todo["title"],
-                "completed": todo["completed"]
+                "task": todo.get("title"),
+                "completed": todo.get("completed")
             })
 
         tasks[user_id] = task_list
