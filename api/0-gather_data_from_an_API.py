@@ -41,3 +41,4 @@ if __name__ == "__main__":
                     print("Task {} Formatting: Incorrect".format(count))
 
     check_tasks(int(sys.argv[1]))
+
