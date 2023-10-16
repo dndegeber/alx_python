@@ -1,44 +1,38 @@
 #!/usr/bin/python3
-"""
-Fetches employee info from REST API
-"""
 
 import requests
 import sys
 
-users_url = "https://jsonplaceholder.typicode.com/users"
-todos_url = "https://jsonplaceholder.typicode.com/todos"
-
 
 def get_employee_info(employee_id):
-    """ Fetch employee name, number of tasks """
+    """
+    Fetches and prints information about a user's completed tasks.
 
-    user_data = requests.get(f"{users_url}/{employee_id}").json()
-    employee_name = user_data['name']
+    Args:
+        employee_id (int): The ID of the employee.
 
-    todo_data = requests.get(f"{users_url}/{employee_id}/todos").json()
-    num_completed_tasks = len([task for task in todo_data if task['completed']])
-    total_tasks = len(todo_data)
+    Returns:
+        None
+    """
+    user_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}')
+    todo_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}/todos')
 
-    print(f"Employee {employee_name} is done with tasks({num_completed_tasks}/{total_tasks}):")
-    for task in [task for task in todo_data if task['completed']]:
-        print(f"\t{task['title']}")
+    if user_response.status_code == 200 and todo_response.status_code == 200:
+        user_data = user_response.json()
+        todo_data = todo_response.json()
+
+        completed_tasks = [task for task in todo_data if task.get('completed')]
+
+        print(f"Employee {user_data.get('name')} is done with tasks({len(completed_tasks)}/{len(todo_data)}):")
+        for task in completed_tasks:
+            print(f"\t{task.get('title')}")
+    else:
+        print(f"Error fetching data for employee ID {employee_id}")
 
 
 if __name__ == "__main__":
-    def check_tasks(id):
-        """ Check student output for formatting """
-
-        filename = 'student_output'
-        count = 0
-        with open(filename, 'r') as f:
-            next(f)
-            for line in f:
-                count += 1
-                if line[0] == '\t' and line[1] == ' ' and line[-1] == '\n':
-                    print("Task {} Formatting: OK".format(count))
-                else:
-                    print("Task {} Formatting: Incorrect".format(count))
-
-    check_tasks(int(sys.argv[1]))
-
+    if len(sys.argv) != 2:
+        print("Usage: python3 script.py <employee_id>")
+        sys.exit(1)
+    employee_id = int(sys.argv[1])
+    get_employee_info(employee_id)
