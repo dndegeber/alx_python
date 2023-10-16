@@ -1,10 +1,23 @@
 #!/usr/bin/python3
+"""
+Fetches and exports information about a user's completed tasks.
+"""
 
+import csv
 import requests
 import sys
-import csv
+
 
 def get_employee_info(employee_id):
+    """
+    Fetches and prints information about a user's completed tasks.
+
+    Args:
+        employee_id (int): The ID of the employee.
+
+    Returns:
+        None
+    """
     user_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}')
     todo_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}/todos')
 
@@ -12,10 +25,10 @@ def get_employee_info(employee_id):
         user_data = user_response.json()
         todo_data = todo_response.json()
 
-        completed_tasks = [(user_data['id'], user_data['username'], task['completed'], task['title']) for task in todo_data]
+        completed_tasks = [(user_data.get('id'), user_data.get('username'), task.get('completed'), task.get('title')) for task in todo_data]
 
         # Save to CSV file
-        file_name = f"{user_data['id']}.csv"
+        file_name = f"{user_data.get('id')}.csv"
         with open(file_name, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
@@ -24,6 +37,7 @@ def get_employee_info(employee_id):
         print(f"Data exported to {file_name}")
     else:
         print(f"Error fetching data for employee ID {employee_id}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
