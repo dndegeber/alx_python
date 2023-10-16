@@ -1,7 +1,43 @@
--- 0-privileges.sql
+import MySQLdb
+import sys
 
--- This script should list privileges, but it won't work as intended.
--- It doesn't grant any privileges to the users.
+def list_states(username, password, database):
+    # Connect to MySQL server
+    db = MySQLdb.connect(
+        host="localhost",
+        user=username,
+        passwd=password,
+        db=database,
+        port=3306
+    )
 
-SHOW GRANTS FOR 'user_0d_1'@'localhost';
-SHOW GRANTS FOR 'user_0d_2'@'localhost';
+    # Create a cursor object
+    cur = db.cursor()
+
+    # Execute the query to retrieve states
+    cur.execute("SELECT * FROM states ORDER BY id")
+
+    # Fetch all the rows
+    rows = cur.fetchall()
+
+    # Print the results
+    for row in rows:
+        print(row)
+
+    # Close the cursor and connection
+    cur.close()
+    db.close()
+
+if __name__ == "__main__":
+    # Check if the correct number of arguments are provided
+    if len(sys.argv) != 4:
+        print("Usage: python3 0-select_states.py <username> <password> <database>")
+        sys.exit(1)
+
+    username = sys.argv[1]
+    password = sys.argv[2]
+    database = sys.argv[3]
+
+    # Call the function with provided arguments
+    list_states(username, password, database)
+
