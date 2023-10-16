@@ -52,3 +52,4 @@ if __name__ == "__main__":
     # Call the function with provided arguments
     filter_cities_by_state(username, password, database, state_name)
 
+
