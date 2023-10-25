@@ -1,15 +1,16 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
-Script to fetch and export employee TODO list progress to a JSON file.
+Fetches and exports information about a user's completed tasks in JSON format.
 """
 
-import requests
 import json
+import requests
 import sys
+
 
 def get_employee_info(employee_id):
     """
-    Fetches and prints information about a user's completed tasks.
+    Fetches and exports information about a user's completed tasks in JSON format.
 
     Args:
         employee_id (int): The ID of the employee.
@@ -24,25 +25,22 @@ def get_employee_info(employee_id):
         user_data = user_response.json()
         todo_data = todo_response.json()
 
-        completed_tasks = [{"task": task.get('title'), "completed": task.get('completed'), "username": user_data.get('username')} for task in todo_data]
+        completed_tasks = [{"task": task['title'], "completed": task['completed'], "username": user_data['username']} for task in todo_data]
 
-        json_data = {str(user_data.get('id')): completed_tasks}
+        # Save to JSON file
+        file_name = f"{user_data['id']}.json"
+        with open(file_name, mode='w') as file:
+            json.dump({user_data['id']: completed_tasks}, file)
 
-        print(f"Employee {user_data.get('name')} is done with tasks({len(completed_tasks)}/{len(todo_data)}):")
-        for task in completed_tasks:
-            print(f"\t{task['task']}")
-
-        # Export to JSON
-        json_filename = f"{user_data.get('id')}.json"
-        with open(json_filename, mode='w') as json_file:
-            json.dump(json_data, json_file)
-        print(f"Data exported to {json_filename}")
+        print(f"Data exported to {file_name}")
     else:
         print(f"Error fetching data for employee ID {employee_id}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python3 script.py <employee_id>")
         sys.exit(1)
+
     employee_id = int(sys.argv[1])
     get_employee_info(employee_id)
