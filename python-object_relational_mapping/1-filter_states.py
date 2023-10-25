@@ -39,5 +39,5 @@ if __name__ == "__main__":
     database = sys.argv[3]
 
     # Call the function with provided arguments
-    list_states_starting_with_n(username, password, database)
+    list_states_starting_with_N(username, password, database)
 
