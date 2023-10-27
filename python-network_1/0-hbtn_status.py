@@ -1,21 +1,18 @@
-#!/usr/bin/python3
+"""
+Fetches a URL using the requests package and displays the body response.
+"""
 import requests
 
-def fetch_status():
-    """
-    Fetches the status from https://alu-intranet.hbtn.io/status using requests module.
-    Displays the response in a specific format.
-    """
-    url = "https://intranet.hbtn.io/status"
+def fetch_hbtn_status():
+    url = 'https://alu-intranet.hbtn.io/status'
+    # Send a GET request to the URL
     response = requests.get(url)
-    content_type = type(response.text).__name__
-    content = response.text
     
+    # Display the body response details
     print("Body response:")
-    print("    - type: {}".format(content_type))
-    print("    - content: {}".format(content))
+    print("\t- type: {}".format(type(response.text)))
+    print("\t- content: {}".format(response.text))
 
 if __name__ == "__main__":
-    fetch_status()
-
+    fetch_hbtn_status()
 
