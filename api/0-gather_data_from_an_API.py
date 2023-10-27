@@ -44,7 +44,6 @@ for todo in todos:
 """Print the first line with the employee name and tasks progress"""
 print("Employee {} is done with tasks({}/{}):".format(employee_name, done_tasks, total_tasks))
 
-
 """Print the titles of the done tasks with a tabulation and a space before each one"""
 for title in done_tasks_titles:
     print("\t " + title)
