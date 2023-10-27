@@ -1,31 +1,34 @@
-#!/usr/bin/python3
+
 """
-This module contains the BaseGeometry class.
+created an empty class
 """
-
-
-class BaseGeometry:
+class BaseMeta(type):
+     """
+     created a BaseMeta class
+     """
+     def __dir__(self):
+        x = super().__dir__()
+        list= [item for item in x if item != "__init_subclass__"]
+        return list
+     
+class BaseGeometry(metaclass=BaseMeta):
     """
-    A class named BaseGeometry.
+    created a class called BaseGeometry
     """
-
+    def __dir__(self):
+        x = super().__dir__()
+        list= [item for item in x if item != "__init_subclass__"]
+        return list
+    
     def area(self):
         """
-        Placeholder method for calculating the area.
+        this function raises an exception 
         """
         raise Exception("area() is not implemented")
 
-    def integer_validator(self, name, value):
-        """
-        Validates that value is a positive integer.
-        Args:
-            name (str): The name of the value.
-            value (int): The value to be validated.
-        Raises:
-            TypeError: If value is not an integer.
-            ValueError: If value is not a positive integer.
-        """
-        if not isinstance(value, int):
-            raise TypeError(f"{name} must be an integer")
-        if value <= 0:
-            raise ValueError(f"{name} must be greater than 0")
+
+
+
+     
+
+
