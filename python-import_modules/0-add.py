@@ -1,9 +1,11 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+from add_0 import add
+
 
 a = 1
 b = 2
 
 
-
 result = add(a, b)
-"{} + {} = {}".format(a, b, result)
+if __name__ == "__main__":
+        print("{} + {} = {}".format(a, b, result))
