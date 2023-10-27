@@ -1,18 +1,28 @@
-#!/usr/bin/python3
+
 """
-Contains an empty class definition for BaseGeometry.
+created an empty class
 """
-
-
-class BaseGeometry:
+class BaseMeta(type):
+     """
+     created a BaseMeta class
+     """
+     def __dir__(self):
+        x = super().__dir__()
+        list= [item for item in x if item != "__init_subclass__"]
+        return list
+     
+class BaseGeometry(metaclass=BaseMeta):
     """
-    An empty class representing the base geometry.
+    created a class called BaseGeometry
     """
-    def __init_subclass__(cls):
-        pass
-
     def __dir__(self):
-        return [attr for attr in dir(type(self)) if attr != '__init_subclass__']
+        x = super().__dir__()
+        list= [item for item in x if item != "__init_subclass__"]
+        return list
 
-    def __class__(self):
-        return type(self)
+
+
+
+     
+
+
