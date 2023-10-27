@@ -1,33 +1,45 @@
+#!/usr/bin/python
+"""
+Import requests module
+"""
 import requests
+"""
+Import sys module to get command line arguments
+"""
+import sys
 import csv
 
-def get_employee_todo_progress(employee_id):
-    # Define the API endpoints
-    base_url = "https://jsonplaceholder.typicode.com"
-    employee_endpoint = f"{base_url}/users/{employee_id}"
-    todo_endpoint = f"{base_url}/todos?userId={employee_id}"
+"""
+Get the employee ID from the first argument
+"""
+employee_id = sys.argv[1]
 
-    # Fetch employee details
-    employee_response = requests.get(employee_endpoint)
-    employee_data = employee_response.json()
-    user_id = employee_data["id"]
-    username = employee_data["username"]
+"""
+Define the base URL for the API
+"""
+base_url = "https://jsonplaceholder.typicode.com/users/"
 
-    # Fetch TODO list
-    todo_response = requests.get(todo_endpoint)
-    todo_data = todo_response.json()
+"""Get the employee details from the API"""
+employee = requests.get(base_url + employee_id).json()
 
-    # Create a CSV file for the employee
-    csv_filename = f"{user_id}.csv"
-    with open(csv_filename, mode='w', newline='') as csv_file:
-        fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+"""Get the employee name"""
+employee_name = employee["name"]
 
-        # Write the CSV header
-        writer.writeheader()
+""" Get the employee TODO list from the API"""
+todos = requests.get(base_url + employee_id + "/todos").json()
 
-        # Write TODO list data to the CSV file
-        for task in todo_data:
-            writer.writerow({
-                "USER_ID": user_id,
-            })
+"""Initialize an empty list to store task records"""
+task_records = []
+
+"""Loop through the todos list and update the task records list"""
+for todo in todos:
+    task_record = [employee_id, employee_name, str(todo["completed"]), todo["title"]]
+    task_records.append(task_record)
+
+"""Write task records to CSV file"""
+csv_file_name = "{}.csv".format(employee_id)
+with open(csv_file_name, mode='w', newline='') as csv_file:
+    csv_writer = csv.writer(csv_file, quoting=csv.QUOTE_MINIMAL)
+    csv_writer.writerows(task_records)
+
+print(f"Data exported to {csv_file_name}")
