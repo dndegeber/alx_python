@@ -1,47 +1,19 @@
-import MySQLdb
-import sys
+#!/usr/bin/python3
+"""takes in an argument and displays all values
+in the states table of hbtn_0e_0_usa
+where name matches the argument"""
 
-def filter_states_by_name(username, password, database, state_name):
-    # Connect to MySQL server
-    db = MySQLdb.connect(
-        host="localhost",
-        user=username,
-        passwd=password,
-        db=database,
-        port=3306
-    )
+if __name__ == '__main__':
 
-    # Create a cursor object
+    import MySQLdb
+    import sys
+
+    db = MySQLdb.connect(host='localhost', port=3306,
+                         user=sys.argv[1], passwd=sys.argv[2], db=sys.argv[3])
+
     cur = db.cursor()
-
-    # Use format to create the SQL query with the user input
-    query = "SELECT * FROM states WHERE name = '{}' ORDER BY id".format(state_name)
-
-    # Execute the query
-    cur.execute(query)
-
-    # Fetch all the rows
+    cur.execute("SELECT * FROM states WHERE name LIKE BINARY '{}'\
+                ORDER BY states.id ASC".format(sys.argv[4]))
     rows = cur.fetchall()
-
-    # Print the results
     for row in rows:
         print(row)
-
-    # Close the cursor and connection
-    cur.close()
-    db.close()
-
-if __name__ == "__main__":
-    # Check if the correct number of arguments are provided
-    if len(sys.argv) != 5:
-        print("Usage: ./2-my_filter_states.py <username> <password> <database> <state_name>")
-        sys.exit(1)
-
-    username = sys.argv[1]
-    password = sys.argv[2]
-    database = sys.argv[3]
-    state_name = sys.argv[4]
-
-    # Call the function with provided arguments
-    filter_states_by_name(username, password, database, state_name)
-
