@@ -1,48 +1,33 @@
-#!/usr/bin/python3
-"""
-Fetches and exports information about a user's completed tasks.
-"""
-
-import csv
 import requests
-import sys
+import csv
 
+def get_employee_todo_progress(employee_id):
+    # Define the API endpoints
+    base_url = "https://jsonplaceholder.typicode.com"
+    employee_endpoint = f"{base_url}/users/{employee_id}"
+    todo_endpoint = f"{base_url}/todos?userId={employee_id}"
 
-def get_employee_info(employee_id):
-    """
-    Fetches and prints information about a user's completed tasks.
+    # Fetch employee details
+    employee_response = requests.get(employee_endpoint)
+    employee_data = employee_response.json()
+    user_id = employee_data["id"]
+    username = employee_data["username"]
 
-    Args:
-        employee_id (int): The ID of the employee.
+    # Fetch TODO list
+    todo_response = requests.get(todo_endpoint)
+    todo_data = todo_response.json()
 
-    Returns:
-        None
-    """
-    user_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}')
-    todo_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}/todos')
+    # Create a CSV file for the employee
+    csv_filename = f"{user_id}.csv"
+    with open(csv_filename, mode='w', newline='') as csv_file:
+        fieldnames = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
-    if user_response.status_code == 200 and todo_response.status_code == 200:
-        user_data = user_response.json()
-        todo_data = todo_response.json()
+        # Write the CSV header
+        writer.writeheader()
 
-        completed_tasks = [(user_data.get('id'), user_data.get('username'), task.get('completed'), task.get('title')) for task in todo_data]
-
-        # Save to CSV file
-        file_name = f"{user_data.get('id')}.csv"
-        with open(file_name, mode='w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
-            writer.writerows(completed_tasks)
-
-        print(f"Data exported to {file_name}")
-    else:
-        print(f"Error fetching data for employee ID {employee_id}")
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 script.py <employee_id>")
-        sys.exit(1)
-
-    employee_id = int(sys.argv[1])
-    get_employee_info(employee_id)
+        # Write TODO list data to the CSV file
+        for task in todo_data:
+            writer.writerow({
+                "USER_ID": user_id,
+            })
