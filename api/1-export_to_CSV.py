@@ -1,45 +1,48 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
-Import requests module
+Fetches and exports information about a user's completed tasks.
 """
-import requests
-"""
-Import sys module to get command line arguments
-"""
-import sys
+
 import csv
+import requests
+import sys
 
-"""
-Get the employee ID from the first argument
-"""
-employee_id = sys.argv[1]
 
-"""
-Define the base URL for the API
-"""
-base_url = "https://jsonplaceholder.typicode.com/users/"
+def get_employee_info(employee_id):
+    """
+    Fetches and prints information about a user's completed tasks.
 
-"""Get the employee details from the API"""
-employee = requests.get(base_url + employee_id).json()
+    Args:
+        employee_id (int): The ID of the employee.
 
-"""Get the employee name"""
-employee_name = employee["name"]
+    Returns:
+        None
+    """
+    user_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}')
+    todo_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}/todos')
 
-""" Get the employee TODO list from the API"""
-todos = requests.get(base_url + employee_id + "/todos").json()
+    if user_response.status_code == 200 and todo_response.status_code == 200:
+        user_data = user_response.json()
+        todo_data = todo_response.json()
 
-"""Initialize an empty list to store task records"""
-task_records = []
+        completed_tasks = [(user_data.get('id'), user_data.get('username'), task.get('completed'), task.get('title')) for task in todo_data]
 
-"""Loop through the todos list and update the task records list"""
-for todo in todos:
-    task_record = [employee_id, employee_name, str(todo["completed"]), todo["title"]]
-    task_records.append(task_record)
+        # Save to CSV file
+        file_name = f"{user_data.get('id')}.csv"
+        with open(file_name, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
+            writer.writerows(completed_tasks)
 
-"""Write task records to CSV file"""
-csv_file_name = "{}.csv".format(employee_id)
-with open(csv_file_name, mode='w', newline='') as csv_file:
-    csv_writer = csv.writer(csv_file, quoting=csv.QUOTE_MINIMAL)
-    csv_writer.writerows(task_records)
+        print(f"Data exported to {file_name}")
+    else:
+        print(f"Error fetching data for employee ID {employee_id}")
 
-print(f"Data exported to {csv_file_name}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python3 script.py <employee_id>")
+        sys.exit(1)
+
+    employee_id = int(sys.argv[1])
+    get_employee_info(employee_id)
