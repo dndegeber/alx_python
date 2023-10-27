@@ -1,43 +1,19 @@
-import MySQLdb
-import sys
+#!/usr/bin/python3
+"""lists all states with a name starting with N
+(upper N) from the database hbtn_0e_0_usa"""
 
-def list_states_starting_with_N(username, password, database):
-    # Connect to MySQL server
-    db = MySQLdb.connect(
-        host="localhost",
-        user=username,
-        passwd=password,
-        db=database,
-        port=3306
-    )
+if __name__ == '__main__':
 
-    # Create a cursor object
+    import MySQLdb
+    import sys
+
+    db = MySQLdb.connect(host='localhost', port=3306,
+                         user=sys.argv[1], passwd=sys.argv[2], db=sys.argv[3])
+
     cur = db.cursor()
-
-    # Execute the query to retrieve states starting with 'N'
-    cur.execute("SELECT * FROM states WHERE name LIKE 'N%' ORDER BY id")
-
-    # Fetch all the rows
+    cur.execute("""SELECT * FROM states WHERE name
+                LIKE BINARY 'N%' ORDER BY states.id ASC""")
     rows = cur.fetchall()
-
-    # Print the results
     for row in rows:
         print(row)
-
-    # Close the cursor and connection
-    cur.close()
-    db.close()
-
-if __name__ == "__main__":
-    # Check if the correct number of arguments are provided
-    if len(sys.argv) != 4:
-        print("Usage: ./1-filter_states.py <username> <password> <database>")
-        sys.exit(1)
-
-    username = sys.argv[1]
-    password = sys.argv[2]
-    database = sys.argv[3]
-
-    # Call the function with provided arguments
-    list_states_starting_with_N(username, password, database)
-
+        
